@@ -2,7 +2,7 @@
 
 set -x
 
-subscriptionId=$(az account show --query id --output tsv)
+subscriptionID=$(az account show --query id --output tsv)
 
 sigResourceGroup=DevOps-rg
 
