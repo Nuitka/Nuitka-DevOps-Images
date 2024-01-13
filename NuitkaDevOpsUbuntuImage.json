@@ -1,0 +1,75 @@
+{
+    "type": "Microsoft.VirtualMachineImages/imageTemplates",
+    "apiVersion": "2020-02-14",
+    "location": "<region1>",
+    "dependsOn": [],
+    "tags": {
+            "imagebuilderTemplate": "NuitkaDevOpsCentOSImage",
+            "userIdentity": "enabled"
+        },
+        "identity": {
+            "type": "UserAssigned",
+            "userAssignedIdentities": {
+                "<imgBuilderId>": {}
+            }
+        },
+    "properties": {
+
+        "buildTimeoutInMinutes" : 100,
+
+        "vmProfile": 
+                {
+                "vmSize": "Standard_DS2_v2",
+                "osDiskSizeGB": 127
+                },
+        
+        "source": {
+            "type": "PlatformImage",
+                "publisher": "Canonical",
+                "offer": "UbuntuServer",
+                "sku": "24.04-LTS",
+                "version": "latest"
+            
+        },
+        "customize": [
+            {
+                "type": "Shell",
+                "name": "updateSystem",
+                "inline": [
+                    "sudo apt -y update",
+                    "sudo apt -y upgrade"
+                ]
+            },
+            {
+                "type": "Shell",
+                "name": "installPrereqs",
+                "inline": [
+                    "sudo add-apt-repository ppa:deadsnakes/ppa",
+                    "sudo apt -y install build-essential clang python3.11",
+                    "sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 310",
+                    "sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 311"
+                ]
+            }
+        ],
+        "distribute": 
+            [
+                {
+                    "type": "SharedImage",
+                    "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageDefName>",
+                    "runOutputName": "<runOutputName>",
+                    "targetRegions": [
+                        {
+                            "name": "<region1>",
+                            "replicaCount": 1,
+                            "storageAccountType": "Standard_ZRS"
+                        }
+                    ],
+                    "artifactTags": {
+                        "source": "azVmImageBuilder",
+                        "baseosimg": "windows-11"
+                    }
+                }
+            ]
+        }
+}
+
