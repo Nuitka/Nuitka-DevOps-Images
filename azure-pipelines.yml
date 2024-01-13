@@ -7,7 +7,7 @@ pool:
 steps:
 - task: AzureCLI@2
   inputs:
-    azureSubscription: 'Nuitka(631b7fbe-7e89-4f3b-a230-3820ab93e1ac)'
+    azureSubscription: 'DevOps-Images'
     scriptType: 'bash'
     scriptLocation: 'scriptPath'
     scriptPath: 'build-windows.sh'
