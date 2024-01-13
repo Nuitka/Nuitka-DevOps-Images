@@ -1,14 +1,33 @@
 trigger:
 - main
 
-pool:
-  vmImage: ubuntu-latest
+jobs:
+- job:
+  displayName: 'Windows Image'
+  timeoutInMinutes: 0
+  pool:
+    vmImage: ubuntu-latest
 
-steps:
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'DevOps-Images'
-    scriptType: 'bash'
-    scriptLocation: 'scriptPath'
-    scriptPath: 'build-windows.sh'
-    addSpnToEnvironment: true
+  steps:  
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: 'DevOps-Images'
+      scriptType: 'bash'
+      scriptLocation: 'scriptPath'
+      scriptPath: 'build-windows.sh'
+      addSpnToEnvironment: true
+
+- job:
+  displayName: 'Ubuntu Image'
+  timeoutInMinutes: 0
+  pool:
+    vmImage: ubuntu-latest
+
+  steps:  
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: 'DevOps-Images'
+      scriptType: 'bash'
+      scriptLocation: 'scriptPath'
+      scriptPath: 'build-ubuntu.sh'
+      addSpnToEnvironment: true
