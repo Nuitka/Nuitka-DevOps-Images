@@ -8,6 +8,7 @@ subscriptionID=$(az account show --query id --output tsv)
 sigResourceGroup=DevOps-rg
 
 location=EastUS
+location2=EastUS2
 
 sigName=DevOps_images
 imageDefName=NuitkaWindowsDevOps
@@ -28,6 +29,7 @@ sed -i -e "s/<rgName>/$sigResourceGroup/g" NuitkaDevOpsWindowsImage_tmp.json
 sed -i -e "s/<imageDefName>/$imageDefName/g" NuitkaDevOpsWindowsImage_tmp.json
 sed -i -e "s/<sharedImageGalName>/$sigName/g" NuitkaDevOpsWindowsImage_tmp.json
 sed -i -e "s/<region1>/$location/g" NuitkaDevOpsWindowsImage_tmp.json
+sed -i -e "s/<region2>/$location2/g" NuitkaDevOpsWindowsImage_tmp.json
 sed -i -e "s/<runOutputName>/$runOutputName/g" NuitkaDevOpsWindowsImage_tmp.json
 sed -i -e "s%<imgBuilderId>%$imgBuilderId%g" NuitkaDevOpsWindowsImage_tmp.json
 

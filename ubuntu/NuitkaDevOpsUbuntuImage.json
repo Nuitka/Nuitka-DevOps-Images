@@ -61,7 +61,12 @@
                         {
                             "name": "<region1>",
                             "replicaCount": 1,
-                            "storageAccountType": "Standard_ZRS"
+                            "storageAccountType": "Standard_LRS"
+                        },
+                        {
+                            "name": "<region2>",
+                            "replicaCount": 1,
+                            "storageAccountType": "Standard_LRS"
                         }
                     ],
                     "artifactTags": {
