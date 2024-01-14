@@ -4,7 +4,7 @@
     "location": "<region1>",
     "dependsOn": [],
     "tags": {
-            "imagebuilderTemplate": "NuitkaDevOpsCentOSImage",
+            "imagebuilderTemplate": "NuitkaDevOpsUbuntuImage",
             "userIdentity": "enabled"
         },
         "identity": {
@@ -37,15 +37,15 @@
                 "name": "updateSystem",
                 "inline": [
                     "sudo apt -y update",
-                    "sudo apt -y upgrade"
+                    "sudo DEBIAN_FRONTEND=noninteractive apt -y upgrade"
                 ]
             },
             {
                 "type": "Shell",
                 "name": "installPrereqs",
                 "inline": [
-                    "sudo add-apt-repository ppa:deadsnakes/ppa",
-                    "sudo apt -y install build-essential clang python3.11",
+                    "sudo add-apt-repository ppa:deadsnakes/ppa -y",
+                    "sudo DEBIAN_FRONTEND=noninteractive apt -y install build-essential clang python3.11 python3.11-dev python3-dev",
                     "sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 310",
                     "sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 311"
                 ]
@@ -66,7 +66,7 @@
                     ],
                     "artifactTags": {
                         "source": "azVmImageBuilder",
-                        "baseosimg": "windows-11"
+                        "baseosimg": "ubuntu"
                     }
                 }
             ]
