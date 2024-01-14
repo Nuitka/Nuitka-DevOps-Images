@@ -56,6 +56,13 @@
             },
             {
                 "type": "PowerShell",
+                "name": "installPython310",
+                "inline": [
+                    "choco install python310 --params \"/InstallDir:C:\\Python310 /NoLockdown\" -y"
+                ]
+            },
+            {
+                "type": "PowerShell",
                 "name": "installPython311",
                 "inline": [
                     "choco install python311 --params \"/InstallDir:C:\\Python311 /NoLockdown\" -y"
