@@ -1,0 +1,23 @@
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - 'ubuntu/*'
+
+jobs:
+- job:
+  displayName: 'Ubuntu Image'
+  timeoutInMinutes: 0
+  pool:
+    vmImage: ubuntu-latest
+
+  steps:  
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: 'DevOps-Images'
+      scriptType: 'bash'
+      scriptLocation: 'scriptPath'
+      scriptPath: 'ubuntu/build-ubuntu.sh'
+      addSpnToEnvironment: true

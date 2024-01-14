@@ -1,6 +1,7 @@
 #!/bin/sh
 
 set -x
+cd "$(dirname "$0")"
 
 subscriptionID=$(az account show --query id --output tsv)
 
@@ -9,8 +10,8 @@ sigResourceGroup=DevOps-rg
 location=EastUS
 
 sigName=DevOps_images
-imageDefName=NuitkaUbuntuDevOps
-runOutputName=NuitkaUbuntuDevOps
+imageDefName=NuitkaWindowsDevOps
+runOutputName=NuitkaWindowsDevOps
 
 identityName=aibBuiUserId
 
@@ -20,21 +21,21 @@ imgBuilderCliId=$(az identity show -g $sigResourceGroup -n $identityName --query
 # Get the user identity URI that's needed for the template
 imgBuilderId=/subscriptions/$subscriptionID/resourcegroups/$sigResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$identityName
 
-cp NuitkaDevOpsUbuntuImage.json NuitkaDevOpsUbuntuImage_tmp.json
+cp NuitkaDevOpsWindowsImage.json NuitkaDevOpsWindowsImage_tmp.json
 
-sed -i -e "s/<subscriptionID>/$subscriptionID/g" NuitkaDevOpsUbuntuImage_tmp.json
-sed -i -e "s/<rgName>/$sigResourceGroup/g" NuitkaDevOpsUbuntuImage_tmp.json
-sed -i -e "s/<imageDefName>/$imageDefName/g" NuitkaDevOpsUbuntuImage_tmp.json
-sed -i -e "s/<sharedImageGalName>/$sigName/g" NuitkaDevOpsUbuntuImage_tmp.json
-sed -i -e "s/<region1>/$location/g" NuitkaDevOpsUbuntuImage_tmp.json
-sed -i -e "s/<runOutputName>/$runOutputName/g" NuitkaDevOpsUbuntuImage_tmp.json
-sed -i -e "s%<imgBuilderId>%$imgBuilderId%g" NuitkaDevOpsUbuntuImage_tmp.json
+sed -i -e "s/<subscriptionID>/$subscriptionID/g" NuitkaDevOpsWindowsImage_tmp.json
+sed -i -e "s/<rgName>/$sigResourceGroup/g" NuitkaDevOpsWindowsImage_tmp.json
+sed -i -e "s/<imageDefName>/$imageDefName/g" NuitkaDevOpsWindowsImage_tmp.json
+sed -i -e "s/<sharedImageGalName>/$sigName/g" NuitkaDevOpsWindowsImage_tmp.json
+sed -i -e "s/<region1>/$location/g" NuitkaDevOpsWindowsImage_tmp.json
+sed -i -e "s/<runOutputName>/$runOutputName/g" NuitkaDevOpsWindowsImage_tmp.json
+sed -i -e "s%<imgBuilderId>%$imgBuilderId%g" NuitkaDevOpsWindowsImage_tmp.json
 
-imageName=NuitkaDevOpsUbuntuImage$(date +'%s')
+imageName=NuitkaDevOpsWindowsImage$(date +'%s')
 
 az resource create \
     --resource-group $sigResourceGroup \
-    --properties @NuitkaDevOpsUbuntuImage_tmp.json \
+    --properties @NuitkaDevOpsWindowsImage_tmp.json \
     --is-full-object \
     --resource-type Microsoft.VirtualMachineImages/imageTemplates \
     -n $imageName
