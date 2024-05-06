@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -x
 cd "$(dirname "$0")"
@@ -42,15 +42,47 @@ az resource create \
     --resource-type Microsoft.VirtualMachineImages/imageTemplates \
     -n $imageName
 
+echo "Running image builder."
+
 az resource invoke-action \
      --resource-group $sigResourceGroup \
      --resource-type  Microsoft.VirtualMachineImages/imageTemplates \
      -n $imageName \
-     --action Run
+     --action Run > out.txt 2>&1 &
 
-sleep 10
+pid=$!
+
+trap "kill $pid 2> /dev/null" EXIT
+
+# While copy is running...
+while kill -0 $pid 2> /dev/null; do
+    sleep 15
+
+    echo "Checking login"
+    az account list --refresh
+done
+
+# Disable the trap on a normal exit.
+trap - EXIT
+
+logLocation=$(cat out.txt | sed -nE 's/^.+Packer build logs are at location (.+)\. Please navigate.+$/\1/p')
+
+exitcode=0
+
+if [ ! -z "$logLocation" ]; then
+    storageAccount=$(echo $logLocation | cut -d / -f 9)
+    logPath=$(echo $logLocation | cut -d / -f 14-)
+
+    exitcode=1
+
+    az storage blob download -f output.txt --account-name $storageAccount --container-name packerlogs --name $logPath
+
+    cat output.txt
+fi
 
 az resource delete \
     --resource-group $sigResourceGroup \
     --resource-type Microsoft.VirtualMachineImages/imageTemplates \
     -n $imageName
+
+exit $exitcode
