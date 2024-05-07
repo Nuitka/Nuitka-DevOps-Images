@@ -59,7 +59,7 @@ while kill -0 $pid 2> /dev/null; do
     sleep 15
 
     echo "Checking login"
-    az account list --refresh
+    az login --service-principal -u $servicePrincipalId --tenant $tenantId --allow-no-subscriptions --federated-token $idToken
 done
 
 # Disable the trap on a normal exit.
